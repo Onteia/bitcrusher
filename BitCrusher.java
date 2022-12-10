@@ -438,11 +438,11 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
       {
       
          if(component == knobDistortion) {
-         
+            distortionAmount = doubleValue;
          } else if(component == knobSamples) {
-         
+            samplesAmount = doubleValue;
          } else if(component == knobResolution) {
-         
+            resolutionAmount = doubleValue;
          }
       
       }
@@ -456,9 +456,10 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
       case Button_Changed:   // doubleValue is the new button/toggle button value
       {
          if(component == toggleDistort) {
-            
+            // distortAfter is true if doubleValue >= 0.5; false otherwise
+            distortAfter = (doubleValue >= 0.5);
          } else if(component == toggleSamples) {
-         
+            samplesAfter = (doubleValue >= 0.5);
          }
       }
       break;
@@ -826,12 +827,14 @@ private VoltageKnob knobSamples;
 
 
 //[user-code-and-variables]    Add your own variables and functions here
+
+private double distortionAmount;
+private double samplesAmount;
+private double resolutionAmount;
+private boolean distortAfter;
+private boolean samplesAfter;
+
 //[/user-code-and-variables]
-
-
-
-
-
 }
 
  
