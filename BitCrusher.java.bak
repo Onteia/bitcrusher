@@ -334,10 +334,10 @@ void InitializeControls()
    labelToggle.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
    labelToggle.SetFont( "<Sans-Serif>", 14, false, false );
 
-   labelDebug = new VoltageLabel( "labelDebug", "Debug", this, "Text" );
+   labelDebug = new VoltageLabel( "labelDebug", "Debug", this, "" );
    AddComponent( labelDebug );
    labelDebug.SetWantsMouseNotifications( false );
-   labelDebug.SetPosition( 25, 211 );
+   labelDebug.SetPosition( 30, 210 );
    labelDebug.SetSize( 80, 30 );
    labelDebug.SetEditable( false, false );
    labelDebug.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
@@ -666,7 +666,19 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
 public void ProcessSample()
 {
    //[user-ProcessSample]   Add your own process-sampling code here
-
+   double leftSignal = inputL.GetValue();
+   double rightSignal = inputR.GetValue();
+   
+   //bitcrush samples
+   
+   
+   if(outputL.IsConnected()) {
+      outputL.SetValue(leftSignal);
+   }
+   
+   if(outputR.IsConnected()) {
+      outputR.SetValue(rightSignal);
+   }
 
 
    //[/user-ProcessSample]
