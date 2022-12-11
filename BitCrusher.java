@@ -61,7 +61,7 @@ void InitializeControls()
    knobDistortion = new VoltageKnob( "knobDistortion", "Distortion", this, 0.0, 1.0, 0.0 );
    AddComponent( knobDistortion );
    knobDistortion.SetWantsMouseNotifications( false );
-   knobDistortion.SetPosition( 12, 62 );
+   knobDistortion.SetPosition( 14, 63 );
    knobDistortion.SetSize( 35, 35 );
    knobDistortion.SetSkin( "Plastic White" );
    knobDistortion.SetRange( 0.0, 1.0, 0.0, false, 0 );
@@ -306,38 +306,6 @@ void InitializeControls()
    labelBits.SetHasCustomTextHoverColor( false );
    labelBits.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
    labelBits.SetFont( "<Sans-Serif>", 14, false, false );
-
-   knobPhase = new VoltageKnob( "knobPhase", "Phase", this, 0.0, 1.0, 0.0 );
-   AddComponent( knobPhase );
-   knobPhase.SetWantsMouseNotifications( false );
-   knobPhase.SetPosition( 94, 127 );
-   knobPhase.SetSize( 35, 35 );
-   knobPhase.SetSkin( "Plastic White" );
-   knobPhase.SetRange( 0.0, 1.0, 0.0, false, 0 );
-   knobPhase.SetKnobParams( 215, 145 );
-   knobPhase.DisplayValueInPercent( false );
-   knobPhase.SetKnobAdjustsRing( true );
-
-   labelPhase = new VoltageLabel( "labelPhase", "Phase Label", this, "Phase" );
-   AddComponent( labelPhase );
-   labelPhase.SetWantsMouseNotifications( false );
-   labelPhase.SetPosition( 94, 98 );
-   labelPhase.SetSize( 37, 30 );
-   labelPhase.SetEditable( false, false );
-   labelPhase.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   labelPhase.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   labelPhase.SetColor( new Color( 255, 255, 255, 255 ) );
-   labelPhase.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   labelPhase.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   labelPhase.SetBorderSize( 1 );
-   labelPhase.SetMultiLineEdit( false );
-   labelPhase.SetIsNumberEditor( false );
-   labelPhase.SetNumberEditorRange( 0, 100 );
-   labelPhase.SetNumberEditorInterval( 1 );
-   labelPhase.SetNumberEditorUsesMouseWheel( false );
-   labelPhase.SetHasCustomTextHoverColor( false );
-   labelPhase.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   labelPhase.SetFont( "<Sans-Serif>", 14, false, false );
 }
 
 
@@ -399,8 +367,6 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
             bitAmount = (int) doubleValue;
             power = (int) Math.pow(2,bitAmount - 1);
             step = 1.0/power;
-         } else if(component == knobPhase) {
-            phase = (int) doubleValue * samplesAmount;
          }
       
       }
@@ -618,10 +584,7 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
 public void ProcessSample()
 {
    //[user-ProcessSample]   Add your own process-sampling code here
-   if(phase >= samplesAmount) {
-      phase = samplesAmount-1;
-   }
-   
+
    double leftSignal = inputL.GetValue();
    double rightSignal = inputR.GetValue();
    
@@ -673,10 +636,6 @@ public String GetTooltipText( VoltageComponent component )
    if(component == knobBits) {
       int normalizedValue = (int) component.GetValue();
       return (normalizedValue + "");
-   }
-
-   if(component == knobPhase) {
-      return (phase*samplesAmount + "");
    }
 
    return super.GetTooltipText( component );
@@ -794,8 +753,6 @@ public void SetStateInformationForVariations(byte[] stateInfo)
 
 
 // Auto-generated variables
-private VoltageLabel labelPhase;
-private VoltageKnob knobPhase;
 private VoltageLabel labelBits;
 private VoltageLabel labelSamples;
 private VoltageLabel labelDistortion;
@@ -821,7 +778,6 @@ private double distortionAmount;
 private int samplesAmount;
 private int bitAmount;
 private static double previousSample;
-private static int phase = 0;
 private static int sampleCount = 0;
 private static int power;
 private static double step;
@@ -841,7 +797,7 @@ private static double LimitSamples(double signal, int samples) {
       sampleCount = 0;
    }
    
-   if(sampleCount % samples == phase) {
+   if(sampleCount % samples == 0) {
       previousSample = signal;
    }
    
@@ -853,18 +809,6 @@ private static double LimitSamples(double signal, int samples) {
 private static double LimitBits(double signal, int bits) {
    
    //find which step value is closest to the signal
-   if(signal == 0) {
-      return 0;
-   }
-   
-   int sign;
-   
-   if(signal > 0) {
-      sign = 1;
-   } else {
-      sign = -1;
-   }
-   
    double quantized = Math.round(signal * power) * step;
    
    return quantized;
