@@ -47,13 +47,13 @@ void InitializeControls()
    knobSamples.DisplayValueInPercent( false );
    knobSamples.SetKnobAdjustsRing( true );
 
-   knobBits = new VoltageKnob( "knobBits", "Bits", this, 1, 32, 32 );
+   knobBits = new VoltageKnob( "knobBits", "Bits", this, 1, 16, 16 );
    AddComponent( knobBits );
    knobBits.SetWantsMouseNotifications( false );
    knobBits.SetPosition( 13, 184 );
-   knobBits.SetSize( 34, 34 );
+   knobBits.SetSize( 35, 35 );
    knobBits.SetSkin( "Plastic White" );
-   knobBits.SetRange( 1, 32, 32, false, 0 );
+   knobBits.SetRange( 1, 16, 16, false, 0 );
    knobBits.SetKnobParams( 215, 145 );
    knobBits.DisplayValueInPercent( false );
    knobBits.SetKnobAdjustsRing( true );
@@ -62,7 +62,7 @@ void InitializeControls()
    AddComponent( knobDistortion );
    knobDistortion.SetWantsMouseNotifications( false );
    knobDistortion.SetPosition( 12, 62 );
-   knobDistortion.SetSize( 36, 36 );
+   knobDistortion.SetSize( 35, 35 );
    knobDistortion.SetSkin( "Plastic White" );
    knobDistortion.SetRange( 0.0, 1.0, 0.0, false, 0 );
    knobDistortion.SetKnobParams( 215, 145 );
@@ -223,26 +223,26 @@ void InitializeControls()
    labelOR.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
    labelOR.SetFont( "<Sans-Serif>", 14, false, false );
 
-   textLabel7 = new VoltageLabel( "textLabel7", "textLabel7", this, "bitcrusher" );
-   AddComponent( textLabel7 );
-   textLabel7.SetWantsMouseNotifications( false );
-   textLabel7.SetPosition( 37, 0 );
-   textLabel7.SetSize( 70, 30 );
-   textLabel7.SetEditable( false, false );
-   textLabel7.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   textLabel7.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   textLabel7.SetColor( new Color( 255, 255, 255, 255 ) );
-   textLabel7.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   textLabel7.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   textLabel7.SetBorderSize( 1 );
-   textLabel7.SetMultiLineEdit( false );
-   textLabel7.SetIsNumberEditor( false );
-   textLabel7.SetNumberEditorRange( 0, 100 );
-   textLabel7.SetNumberEditorInterval( 1 );
-   textLabel7.SetNumberEditorUsesMouseWheel( false );
-   textLabel7.SetHasCustomTextHoverColor( false );
-   textLabel7.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   textLabel7.SetFont( "<Sans-Serif>", 14, false, false );
+   labelTitle = new VoltageLabel( "labelTitle", "bitcrusher", this, "bitcrusher" );
+   AddComponent( labelTitle );
+   labelTitle.SetWantsMouseNotifications( false );
+   labelTitle.SetPosition( 37, 0 );
+   labelTitle.SetSize( 70, 30 );
+   labelTitle.SetEditable( false, false );
+   labelTitle.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
+   labelTitle.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
+   labelTitle.SetColor( new Color( 255, 255, 255, 255 ) );
+   labelTitle.SetBkColor( new Color( 65, 65, 65, 0 ) );
+   labelTitle.SetBorderColor( new Color( 0, 0, 0, 0 ) );
+   labelTitle.SetBorderSize( 1 );
+   labelTitle.SetMultiLineEdit( false );
+   labelTitle.SetIsNumberEditor( false );
+   labelTitle.SetNumberEditorRange( 0, 100 );
+   labelTitle.SetNumberEditorInterval( 1 );
+   labelTitle.SetNumberEditorUsesMouseWheel( false );
+   labelTitle.SetHasCustomTextHoverColor( false );
+   labelTitle.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
+   labelTitle.SetFont( "<Sans-Serif>", 14, false, false );
 
    labelDistortion = new VoltageLabel( "labelDistortion", "Distortion Label", this, "Distort Amount" );
    AddComponent( labelDistortion );
@@ -307,35 +307,37 @@ void InitializeControls()
    labelBits.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
    labelBits.SetFont( "<Sans-Serif>", 14, false, false );
 
-   toggleSamples = new VoltageToggle( "toggleSamples", "Samples Toggle", this, false, 0 );
-   AddComponent( toggleSamples );
-   toggleSamples.SetWantsMouseNotifications( false );
-   toggleSamples.SetPosition( 93, 129 );
-   toggleSamples.SetSize( 31, 31 );
-   toggleSamples.SetSkin( "Blue Square" );
-   toggleSamples.ShowOverlay( false );
-   toggleSamples.SetOverlayText( "" );
+   knobPhase = new VoltageKnob( "knobPhase", "Phase", this, 0.0, 1.0, 0.0 );
+   AddComponent( knobPhase );
+   knobPhase.SetWantsMouseNotifications( false );
+   knobPhase.SetPosition( 94, 127 );
+   knobPhase.SetSize( 35, 35 );
+   knobPhase.SetSkin( "Plastic White" );
+   knobPhase.SetRange( 0.0, 1.0, 0.0, false, 0 );
+   knobPhase.SetKnobParams( 215, 145 );
+   knobPhase.DisplayValueInPercent( false );
+   knobPhase.SetKnobAdjustsRing( true );
 
-   labelToggleSamples = new VoltageLabel( "labelToggleSamples", "Samples Toggle Label", this, "Samples After Bits" );
-   AddComponent( labelToggleSamples );
-   labelToggleSamples.SetWantsMouseNotifications( false );
-   labelToggleSamples.SetPosition( 81, 98 );
-   labelToggleSamples.SetSize( 61, 30 );
-   labelToggleSamples.SetEditable( false, false );
-   labelToggleSamples.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   labelToggleSamples.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   labelToggleSamples.SetColor( new Color( 255, 255, 255, 255 ) );
-   labelToggleSamples.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   labelToggleSamples.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   labelToggleSamples.SetBorderSize( 1 );
-   labelToggleSamples.SetMultiLineEdit( false );
-   labelToggleSamples.SetIsNumberEditor( false );
-   labelToggleSamples.SetNumberEditorRange( 0, 100 );
-   labelToggleSamples.SetNumberEditorInterval( 1 );
-   labelToggleSamples.SetNumberEditorUsesMouseWheel( false );
-   labelToggleSamples.SetHasCustomTextHoverColor( false );
-   labelToggleSamples.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   labelToggleSamples.SetFont( "<Sans-Serif>", 12, false, false );
+   labelPhase = new VoltageLabel( "labelPhase", "Phase Label", this, "Phase" );
+   AddComponent( labelPhase );
+   labelPhase.SetWantsMouseNotifications( false );
+   labelPhase.SetPosition( 94, 98 );
+   labelPhase.SetSize( 37, 30 );
+   labelPhase.SetEditable( false, false );
+   labelPhase.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
+   labelPhase.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
+   labelPhase.SetColor( new Color( 255, 255, 255, 255 ) );
+   labelPhase.SetBkColor( new Color( 65, 65, 65, 0 ) );
+   labelPhase.SetBorderColor( new Color( 0, 0, 0, 0 ) );
+   labelPhase.SetBorderSize( 1 );
+   labelPhase.SetMultiLineEdit( false );
+   labelPhase.SetIsNumberEditor( false );
+   labelPhase.SetNumberEditorRange( 0, 100 );
+   labelPhase.SetNumberEditorInterval( 1 );
+   labelPhase.SetNumberEditorUsesMouseWheel( false );
+   labelPhase.SetHasCustomTextHoverColor( false );
+   labelPhase.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
+   labelPhase.SetFont( "<Sans-Serif>", 14, false, false );
 }
 
 
@@ -392,9 +394,13 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
          if(component == knobDistortion) {
             distortionAmount = doubleValue;
          } else if(component == knobSamples) {
-            samplesAmount = (int) doubleValue;
+            samplesAmount = (int) doubleValue;          
          } else if(component == knobBits) {
             bitAmount = (int) doubleValue;
+            power = (int) Math.pow(2,bitAmount - 1);
+            step = 1.0/power;
+         } else if(component == knobPhase) {
+            phase = (int) doubleValue * samplesAmount;
          }
       
       }
@@ -407,9 +413,6 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
    
       case Button_Changed:   // doubleValue is the new button/toggle button value
       {
-         if(component == toggleSamples) {
-            samplesAfter = (doubleValue >= 0.5);
-         }
       }
       break;
    
@@ -615,6 +618,10 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
 public void ProcessSample()
 {
    //[user-ProcessSample]   Add your own process-sampling code here
+   if(phase >= samplesAmount) {
+      phase = samplesAmount-1;
+   }
+   
    double leftSignal = inputL.GetValue();
    double rightSignal = inputR.GetValue();
    
@@ -622,25 +629,18 @@ public void ProcessSample()
    leftSignal = DistortSignal(leftSignal, distortionAmount);
    rightSignal = DistortSignal(rightSignal, distortionAmount);
    
-   //bitcrush samples
-   if(!samplesAfter) {
-      leftSignal = LimitSamples(leftSignal, samplesAmount);
-      rightSignal = LimitSamples(rightSignal, samplesAmount);
-   }
-   
-   
+   //change samplerate 
+   leftSignal = LimitSamples(leftSignal, samplesAmount);
+   rightSignal = LimitSamples(rightSignal, samplesAmount);
    
    //crush bits
+   
    leftSignal = LimitBits(leftSignal, bitAmount);
    rightSignal = LimitBits(rightSignal, bitAmount);
    
-   //if samples after bits
-   if(samplesAfter) {
-      leftSignal = LimitSamples(leftSignal, samplesAmount);
-      rightSignal = LimitSamples(rightSignal, samplesAmount);
-   }
    
    
+   //send the processed signals to output
    if(outputL.IsConnected()) {
       outputL.SetValue(leftSignal);
    }
@@ -675,6 +675,9 @@ public String GetTooltipText( VoltageComponent component )
       return (normalizedValue + "");
    }
 
+   if(component == knobPhase) {
+      return (phase*samplesAmount + "");
+   }
 
    return super.GetTooltipText( component );
    //[/user-GetTooltipText]
@@ -791,12 +794,12 @@ public void SetStateInformationForVariations(byte[] stateInfo)
 
 
 // Auto-generated variables
-private VoltageLabel labelToggleSamples;
-private VoltageToggle toggleSamples;
+private VoltageLabel labelPhase;
+private VoltageKnob knobPhase;
 private VoltageLabel labelBits;
 private VoltageLabel labelSamples;
 private VoltageLabel labelDistortion;
-private VoltageLabel textLabel7;
+private VoltageLabel labelTitle;
 private VoltageLabel labelOR;
 private VoltageLabel textLabel5;
 private VoltageLabel labelOL;
@@ -817,9 +820,11 @@ private VoltageKnob knobSamples;
 private double distortionAmount;
 private int samplesAmount;
 private int bitAmount;
-private boolean samplesAfter;
 private static double previousSample;
+private static int phase = 0;
 private static int sampleCount = 0;
+private static int power;
+private static double step;
 
 private static double DistortSignal(double signal, double distortionPercent) {
    
@@ -833,6 +838,10 @@ private static double DistortSignal(double signal, double distortionPercent) {
 private static double LimitSamples(double signal, int samples) {
    
    if(sampleCount % samples == 0) {
+      sampleCount = 0;
+   }
+   
+   if(sampleCount % samples == phase) {
       previousSample = signal;
    }
    
@@ -842,7 +851,23 @@ private static double LimitSamples(double signal, int samples) {
 }
 
 private static double LimitBits(double signal, int bits) {
-   return signal;
+   
+   //find which step value is closest to the signal
+   if(signal == 0) {
+      return 0;
+   }
+   
+   int sign;
+   
+   if(signal > 0) {
+      sign = 1;
+   } else {
+      sign = -1;
+   }
+   
+   double quantized = Math.round(signal * power) * step;
+   
+   return quantized;
 }
 
 //[/user-code-and-variables]
