@@ -36,13 +36,13 @@ public BitCrusher( long moduleID, VoltageObjects voltageObjects )
 void InitializeControls()
 {
 
-   knobSamples = new VoltageKnob( "knobSamples", "Samples", this, 1, 48000, 48000 );
+   knobSamples = new VoltageKnob( "knobSamples", "Samples", this, 1, 256, 1 );
    AddComponent( knobSamples );
    knobSamples.SetWantsMouseNotifications( false );
    knobSamples.SetPosition( 12, 127 );
    knobSamples.SetSize( 35, 35 );
    knobSamples.SetSkin( "Plastic White" );
-   knobSamples.SetRange( 1, 48000, 48000, false, 0 );
+   knobSamples.SetRange( 1, 256, 1, false, 0 );
    knobSamples.SetKnobParams( 215, 145 );
    knobSamples.DisplayValueInPercent( false );
    knobSamples.SetKnobAdjustsRing( true );
@@ -307,40 +307,10 @@ void InitializeControls()
    labelBits.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
    labelBits.SetFont( "<Sans-Serif>", 14, false, false );
 
-   toggleDistort = new VoltageToggle( "toggleDistort", "Distortion Toggle", this, false, 0 );
-   AddComponent( toggleDistort );
-   toggleDistort.SetWantsMouseNotifications( false );
-   toggleDistort.SetPosition( 91, 90 );
-   toggleDistort.SetSize( 31, 31 );
-   toggleDistort.SetSkin( "Blue Square" );
-   toggleDistort.ShowOverlay( false );
-   toggleDistort.SetOverlayText( "" );
-
-   labelToggleDist = new VoltageLabel( "labelToggleDist", "Distort Toggle Label", this, "Distort After Samples" );
-   AddComponent( labelToggleDist );
-   labelToggleDist.SetWantsMouseNotifications( false );
-   labelToggleDist.SetPosition( 79, 60 );
-   labelToggleDist.SetSize( 58, 30 );
-   labelToggleDist.SetEditable( false, false );
-   labelToggleDist.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   labelToggleDist.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   labelToggleDist.SetColor( new Color( 255, 255, 255, 255 ) );
-   labelToggleDist.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   labelToggleDist.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   labelToggleDist.SetBorderSize( 1 );
-   labelToggleDist.SetMultiLineEdit( false );
-   labelToggleDist.SetIsNumberEditor( false );
-   labelToggleDist.SetNumberEditorRange( 0, 100 );
-   labelToggleDist.SetNumberEditorInterval( 1 );
-   labelToggleDist.SetNumberEditorUsesMouseWheel( false );
-   labelToggleDist.SetHasCustomTextHoverColor( false );
-   labelToggleDist.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   labelToggleDist.SetFont( "<Sans-Serif>", 14, false, false );
-
    toggleSamples = new VoltageToggle( "toggleSamples", "Samples Toggle", this, false, 0 );
    AddComponent( toggleSamples );
    toggleSamples.SetWantsMouseNotifications( false );
-   toggleSamples.SetPosition( 91, 158 );
+   toggleSamples.SetPosition( 93, 129 );
    toggleSamples.SetSize( 31, 31 );
    toggleSamples.SetSkin( "Blue Square" );
    toggleSamples.ShowOverlay( false );
@@ -349,7 +319,7 @@ void InitializeControls()
    labelToggleSamples = new VoltageLabel( "labelToggleSamples", "Samples Toggle Label", this, "Samples After Bits" );
    AddComponent( labelToggleSamples );
    labelToggleSamples.SetWantsMouseNotifications( false );
-   labelToggleSamples.SetPosition( 79, 127 );
+   labelToggleSamples.SetPosition( 81, 98 );
    labelToggleSamples.SetSize( 61, 30 );
    labelToggleSamples.SetEditable( false, false );
    labelToggleSamples.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
@@ -437,10 +407,7 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
    
       case Button_Changed:   // doubleValue is the new button/toggle button value
       {
-         if(component == toggleDistort) {
-            // distortAfter is true if doubleValue >= 0.5; false otherwise
-            distortAfter = (doubleValue >= 0.5);
-         } else if(component == toggleSamples) {
+         if(component == toggleSamples) {
             samplesAfter = (doubleValue >= 0.5);
          }
       }
@@ -651,12 +618,9 @@ public void ProcessSample()
    double leftSignal = inputL.GetValue();
    double rightSignal = inputR.GetValue();
    
-   //determine if distortion is before or after samples
-   //distort with tanh(x.volume)
-   if(!distortAfter) {
-      leftSignal = DistortSignal(leftSignal, distortionAmount);
-      rightSignal = DistortSignal(rightSignal, distortionAmount);
-   }
+   //distort the signal
+   leftSignal = DistortSignal(leftSignal, distortionAmount);
+   rightSignal = DistortSignal(rightSignal, distortionAmount);
    
    //bitcrush samples
    if(!samplesAfter) {
@@ -664,11 +628,7 @@ public void ProcessSample()
       rightSignal = LimitSamples(rightSignal, samplesAmount);
    }
    
-   //if distort after samples
-   if(distortAfter) {
-      leftSignal = DistortSignal(leftSignal, distortionAmount);
-      rightSignal = DistortSignal(rightSignal, distortionAmount);
-   }
+   
    
    //crush bits
    leftSignal = LimitBits(leftSignal, bitAmount);
@@ -833,8 +793,6 @@ public void SetStateInformationForVariations(byte[] stateInfo)
 // Auto-generated variables
 private VoltageLabel labelToggleSamples;
 private VoltageToggle toggleSamples;
-private VoltageLabel labelToggleDist;
-private VoltageToggle toggleDistort;
 private VoltageLabel labelBits;
 private VoltageLabel labelSamples;
 private VoltageLabel labelDistortion;
@@ -859,8 +817,9 @@ private VoltageKnob knobSamples;
 private double distortionAmount;
 private int samplesAmount;
 private int bitAmount;
-private boolean distortAfter;
 private boolean samplesAfter;
+private static double previousSample;
+private static int sampleCount = 0;
 
 private static double DistortSignal(double signal, double distortionPercent) {
    
@@ -872,7 +831,14 @@ private static double DistortSignal(double signal, double distortionPercent) {
 }
 
 private static double LimitSamples(double signal, int samples) {
-   return signal;
+   
+   if(sampleCount % samples == 0) {
+      previousSample = signal;
+   }
+   
+   sampleCount++;
+   
+   return previousSample;
 }
 
 private static double LimitBits(double signal, int bits) {
