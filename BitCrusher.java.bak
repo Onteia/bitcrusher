@@ -11,6 +11,9 @@ import voltage.effects.*;
 import java.awt.*;
 
 //[user-imports]   Add your own imports here
+import java.lang.Math.*;
+
+
 //[/user-imports]
 
 
@@ -27,35 +30,35 @@ public BitCrusher( long moduleID, VoltageObjects voltageObjects )
 
 
    canBeBypassed = false;
-   SetSkin( "137c25b9d2b74dd9aa32cdecef356d6e" );
+   SetSkin( "d438e6b0323a43a899a2838bab0011b1" );
 }
 
 void InitializeControls()
 {
 
-   knobSamples = new VoltageKnob( "knobSamples", "Samples Knob", this, 0.0, 1.0, 1 );
+   knobSamples = new VoltageKnob( "knobSamples", "Samples", this, 1, 48000, 48000 );
    AddComponent( knobSamples );
    knobSamples.SetWantsMouseNotifications( false );
    knobSamples.SetPosition( 12, 127 );
    knobSamples.SetSize( 35, 35 );
    knobSamples.SetSkin( "Plastic White" );
-   knobSamples.SetRange( 0.0, 1.0, 1, false, 0 );
+   knobSamples.SetRange( 1, 48000, 48000, false, 0 );
    knobSamples.SetKnobParams( 215, 145 );
    knobSamples.DisplayValueInPercent( false );
    knobSamples.SetKnobAdjustsRing( true );
 
-   knobResolution = new VoltageKnob( "knobResolution", "Resolution Knob", this, 0.0, 1.0, 1 );
-   AddComponent( knobResolution );
-   knobResolution.SetWantsMouseNotifications( false );
-   knobResolution.SetPosition( 13, 184 );
-   knobResolution.SetSize( 34, 34 );
-   knobResolution.SetSkin( "Plastic White" );
-   knobResolution.SetRange( 0.0, 1.0, 1, false, 0 );
-   knobResolution.SetKnobParams( 215, 145 );
-   knobResolution.DisplayValueInPercent( false );
-   knobResolution.SetKnobAdjustsRing( true );
+   knobBits = new VoltageKnob( "knobBits", "Bits", this, 1, 32, 32 );
+   AddComponent( knobBits );
+   knobBits.SetWantsMouseNotifications( false );
+   knobBits.SetPosition( 13, 184 );
+   knobBits.SetSize( 34, 34 );
+   knobBits.SetSkin( "Plastic White" );
+   knobBits.SetRange( 1, 32, 32, false, 0 );
+   knobBits.SetKnobParams( 215, 145 );
+   knobBits.DisplayValueInPercent( false );
+   knobBits.SetKnobAdjustsRing( true );
 
-   knobDistortion = new VoltageKnob( "knobDistortion", "Distortion Knob", this, 0.0, 1.0, 0.0 );
+   knobDistortion = new VoltageKnob( "knobDistortion", "Distortion", this, 0.0, 1.0, 0.0 );
    AddComponent( knobDistortion );
    knobDistortion.SetWantsMouseNotifications( false );
    knobDistortion.SetPosition( 12, 62 );
@@ -63,7 +66,7 @@ void InitializeControls()
    knobDistortion.SetSkin( "Plastic White" );
    knobDistortion.SetRange( 0.0, 1.0, 0.0, false, 0 );
    knobDistortion.SetKnobParams( 215, 145 );
-   knobDistortion.DisplayValueInPercent( false );
+   knobDistortion.DisplayValueInPercent( true );
    knobDistortion.SetKnobAdjustsRing( true );
 
    inputL = new VoltageAudioJack( "inputL", "Left Input", this, JackType.JackType_AudioInput );
@@ -182,7 +185,7 @@ void InitializeControls()
    AddComponent( textLabel5 );
    textLabel5.SetWantsMouseNotifications( false );
    textLabel5.SetPosition( 94, 229 );
-   textLabel5.SetSize( 50, 30 );
+   textLabel5.SetSize( 50, 27 );
    textLabel5.SetEditable( false, false );
    textLabel5.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
    textLabel5.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
@@ -262,47 +265,47 @@ void InitializeControls()
    labelDistortion.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
    labelDistortion.SetFont( "<Sans-Serif>", 14, false, false );
 
-   textLabel9 = new VoltageLabel( "textLabel9", "textLabel9", this, "Samples" );
-   AddComponent( textLabel9 );
-   textLabel9.SetWantsMouseNotifications( false );
-   textLabel9.SetPosition( 0, 98 );
-   textLabel9.SetSize( 59, 30 );
-   textLabel9.SetEditable( false, false );
-   textLabel9.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   textLabel9.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   textLabel9.SetColor( new Color( 255, 255, 255, 255 ) );
-   textLabel9.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   textLabel9.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   textLabel9.SetBorderSize( 1 );
-   textLabel9.SetMultiLineEdit( false );
-   textLabel9.SetIsNumberEditor( false );
-   textLabel9.SetNumberEditorRange( 0, 100 );
-   textLabel9.SetNumberEditorInterval( 1 );
-   textLabel9.SetNumberEditorUsesMouseWheel( false );
-   textLabel9.SetHasCustomTextHoverColor( false );
-   textLabel9.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   textLabel9.SetFont( "<Sans-Serif>", 14, false, false );
+   labelSamples = new VoltageLabel( "labelSamples", "Samples Label", this, "Samples" );
+   AddComponent( labelSamples );
+   labelSamples.SetWantsMouseNotifications( false );
+   labelSamples.SetPosition( 0, 98 );
+   labelSamples.SetSize( 59, 30 );
+   labelSamples.SetEditable( false, false );
+   labelSamples.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
+   labelSamples.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
+   labelSamples.SetColor( new Color( 255, 255, 255, 255 ) );
+   labelSamples.SetBkColor( new Color( 65, 65, 65, 0 ) );
+   labelSamples.SetBorderColor( new Color( 0, 0, 0, 0 ) );
+   labelSamples.SetBorderSize( 1 );
+   labelSamples.SetMultiLineEdit( false );
+   labelSamples.SetIsNumberEditor( false );
+   labelSamples.SetNumberEditorRange( 0, 100 );
+   labelSamples.SetNumberEditorInterval( 1 );
+   labelSamples.SetNumberEditorUsesMouseWheel( false );
+   labelSamples.SetHasCustomTextHoverColor( false );
+   labelSamples.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
+   labelSamples.SetFont( "<Sans-Serif>", 14, false, false );
 
-   textLabel10 = new VoltageLabel( "textLabel10", "textLabel10", this, "Resolution" );
-   AddComponent( textLabel10 );
-   textLabel10.SetWantsMouseNotifications( false );
-   textLabel10.SetPosition( 0, 155 );
-   textLabel10.SetSize( 65, 30 );
-   textLabel10.SetEditable( false, false );
-   textLabel10.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   textLabel10.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   textLabel10.SetColor( new Color( 255, 255, 255, 255 ) );
-   textLabel10.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   textLabel10.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   textLabel10.SetBorderSize( 1 );
-   textLabel10.SetMultiLineEdit( false );
-   textLabel10.SetIsNumberEditor( false );
-   textLabel10.SetNumberEditorRange( 0, 100 );
-   textLabel10.SetNumberEditorInterval( 1 );
-   textLabel10.SetNumberEditorUsesMouseWheel( false );
-   textLabel10.SetHasCustomTextHoverColor( false );
-   textLabel10.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   textLabel10.SetFont( "<Sans-Serif>", 14, false, false );
+   labelBits = new VoltageLabel( "labelBits", "Bits Label", this, "Bits" );
+   AddComponent( labelBits );
+   labelBits.SetWantsMouseNotifications( false );
+   labelBits.SetPosition( 0, 157 );
+   labelBits.SetSize( 60, 30 );
+   labelBits.SetEditable( false, false );
+   labelBits.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
+   labelBits.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
+   labelBits.SetColor( new Color( 255, 255, 255, 255 ) );
+   labelBits.SetBkColor( new Color( 65, 65, 65, 0 ) );
+   labelBits.SetBorderColor( new Color( 0, 0, 0, 0 ) );
+   labelBits.SetBorderSize( 1 );
+   labelBits.SetMultiLineEdit( false );
+   labelBits.SetIsNumberEditor( false );
+   labelBits.SetNumberEditorRange( 0, 100 );
+   labelBits.SetNumberEditorInterval( 1 );
+   labelBits.SetNumberEditorUsesMouseWheel( false );
+   labelBits.SetHasCustomTextHoverColor( false );
+   labelBits.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
+   labelBits.SetFont( "<Sans-Serif>", 14, false, false );
 
    toggleDistort = new VoltageToggle( "toggleDistort", "Distortion Toggle", this, false, 0 );
    AddComponent( toggleDistort );
@@ -313,47 +316,26 @@ void InitializeControls()
    toggleDistort.ShowOverlay( false );
    toggleDistort.SetOverlayText( "" );
 
-   labelToggle = new VoltageLabel( "labelToggle", "Distort Toggle Label", this, "Distort After Samples" );
-   AddComponent( labelToggle );
-   labelToggle.SetWantsMouseNotifications( false );
-   labelToggle.SetPosition( 79, 60 );
-   labelToggle.SetSize( 58, 30 );
-   labelToggle.SetEditable( false, false );
-   labelToggle.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   labelToggle.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   labelToggle.SetColor( new Color( 255, 255, 255, 255 ) );
-   labelToggle.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   labelToggle.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   labelToggle.SetBorderSize( 1 );
-   labelToggle.SetMultiLineEdit( false );
-   labelToggle.SetIsNumberEditor( false );
-   labelToggle.SetNumberEditorRange( 0, 100 );
-   labelToggle.SetNumberEditorInterval( 1 );
-   labelToggle.SetNumberEditorUsesMouseWheel( false );
-   labelToggle.SetHasCustomTextHoverColor( false );
-   labelToggle.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   labelToggle.SetFont( "<Sans-Serif>", 14, false, false );
-
-   labelDebug = new VoltageLabel( "labelDebug", "Debug", this, "" );
-   AddComponent( labelDebug );
-   labelDebug.SetWantsMouseNotifications( false );
-   labelDebug.SetPosition( 30, 210 );
-   labelDebug.SetSize( 80, 30 );
-   labelDebug.SetEditable( false, false );
-   labelDebug.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   labelDebug.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   labelDebug.SetColor( new Color( 255, 255, 255, 255 ) );
-   labelDebug.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   labelDebug.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   labelDebug.SetBorderSize( 1 );
-   labelDebug.SetMultiLineEdit( false );
-   labelDebug.SetIsNumberEditor( false );
-   labelDebug.SetNumberEditorRange( 0, 100 );
-   labelDebug.SetNumberEditorInterval( 1 );
-   labelDebug.SetNumberEditorUsesMouseWheel( false );
-   labelDebug.SetHasCustomTextHoverColor( false );
-   labelDebug.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   labelDebug.SetFont( "<Sans-Serif>", 14, false, false );
+   labelToggleDist = new VoltageLabel( "labelToggleDist", "Distort Toggle Label", this, "Distort After Samples" );
+   AddComponent( labelToggleDist );
+   labelToggleDist.SetWantsMouseNotifications( false );
+   labelToggleDist.SetPosition( 79, 60 );
+   labelToggleDist.SetSize( 58, 30 );
+   labelToggleDist.SetEditable( false, false );
+   labelToggleDist.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
+   labelToggleDist.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
+   labelToggleDist.SetColor( new Color( 255, 255, 255, 255 ) );
+   labelToggleDist.SetBkColor( new Color( 65, 65, 65, 0 ) );
+   labelToggleDist.SetBorderColor( new Color( 0, 0, 0, 0 ) );
+   labelToggleDist.SetBorderSize( 1 );
+   labelToggleDist.SetMultiLineEdit( false );
+   labelToggleDist.SetIsNumberEditor( false );
+   labelToggleDist.SetNumberEditorRange( 0, 100 );
+   labelToggleDist.SetNumberEditorInterval( 1 );
+   labelToggleDist.SetNumberEditorUsesMouseWheel( false );
+   labelToggleDist.SetHasCustomTextHoverColor( false );
+   labelToggleDist.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
+   labelToggleDist.SetFont( "<Sans-Serif>", 14, false, false );
 
    toggleSamples = new VoltageToggle( "toggleSamples", "Samples Toggle", this, false, 0 );
    AddComponent( toggleSamples );
@@ -364,26 +346,26 @@ void InitializeControls()
    toggleSamples.ShowOverlay( false );
    toggleSamples.SetOverlayText( "" );
 
-   textLabel13 = new VoltageLabel( "textLabel13", "textLabel13", this, "Samples After Resolution" );
-   AddComponent( textLabel13 );
-   textLabel13.SetWantsMouseNotifications( false );
-   textLabel13.SetPosition( 79, 127 );
-   textLabel13.SetSize( 61, 30 );
-   textLabel13.SetEditable( false, false );
-   textLabel13.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
-   textLabel13.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
-   textLabel13.SetColor( new Color( 255, 255, 255, 255 ) );
-   textLabel13.SetBkColor( new Color( 65, 65, 65, 0 ) );
-   textLabel13.SetBorderColor( new Color( 0, 0, 0, 0 ) );
-   textLabel13.SetBorderSize( 1 );
-   textLabel13.SetMultiLineEdit( false );
-   textLabel13.SetIsNumberEditor( false );
-   textLabel13.SetNumberEditorRange( 0, 100 );
-   textLabel13.SetNumberEditorInterval( 1 );
-   textLabel13.SetNumberEditorUsesMouseWheel( false );
-   textLabel13.SetHasCustomTextHoverColor( false );
-   textLabel13.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
-   textLabel13.SetFont( "<Sans-Serif>", 12, false, false );
+   labelToggleSamples = new VoltageLabel( "labelToggleSamples", "Samples Toggle Label", this, "Samples After Bits" );
+   AddComponent( labelToggleSamples );
+   labelToggleSamples.SetWantsMouseNotifications( false );
+   labelToggleSamples.SetPosition( 79, 127 );
+   labelToggleSamples.SetSize( 61, 30 );
+   labelToggleSamples.SetEditable( false, false );
+   labelToggleSamples.SetJustificationFlags( VoltageLabel.Justification.HorizCentered );
+   labelToggleSamples.SetJustificationFlags( VoltageLabel.Justification.VertCentered );
+   labelToggleSamples.SetColor( new Color( 255, 255, 255, 255 ) );
+   labelToggleSamples.SetBkColor( new Color( 65, 65, 65, 0 ) );
+   labelToggleSamples.SetBorderColor( new Color( 0, 0, 0, 0 ) );
+   labelToggleSamples.SetBorderSize( 1 );
+   labelToggleSamples.SetMultiLineEdit( false );
+   labelToggleSamples.SetIsNumberEditor( false );
+   labelToggleSamples.SetNumberEditorRange( 0, 100 );
+   labelToggleSamples.SetNumberEditorInterval( 1 );
+   labelToggleSamples.SetNumberEditorUsesMouseWheel( false );
+   labelToggleSamples.SetHasCustomTextHoverColor( false );
+   labelToggleSamples.SetTextHoverColor( new Color( 0, 0, 0, 255 ) );
+   labelToggleSamples.SetFont( "<Sans-Serif>", 12, false, false );
 }
 
 
@@ -440,9 +422,9 @@ public boolean Notify( VoltageComponent component, ModuleNotifications notificat
          if(component == knobDistortion) {
             distortionAmount = doubleValue;
          } else if(component == knobSamples) {
-            samplesAmount = doubleValue;
-         } else if(component == knobResolution) {
-            resolutionAmount = doubleValue;
+            samplesAmount = (int) doubleValue;
+         } else if(component == knobBits) {
+            bitAmount = (int) doubleValue;
          }
       
       }
@@ -669,7 +651,34 @@ public void ProcessSample()
    double leftSignal = inputL.GetValue();
    double rightSignal = inputR.GetValue();
    
+   //determine if distortion is before or after samples
+   //distort with tanh(x.volume)
+   if(!distortAfter) {
+      leftSignal = DistortSignal(leftSignal, distortionAmount);
+      rightSignal = DistortSignal(rightSignal, distortionAmount);
+   }
+   
    //bitcrush samples
+   if(!samplesAfter) {
+      leftSignal = LimitSamples(leftSignal, samplesAmount);
+      rightSignal = LimitSamples(rightSignal, samplesAmount);
+   }
+   
+   //if distort after samples
+   if(distortAfter) {
+      leftSignal = DistortSignal(leftSignal, distortionAmount);
+      rightSignal = DistortSignal(rightSignal, distortionAmount);
+   }
+   
+   //crush bits
+   leftSignal = LimitBits(leftSignal, bitAmount);
+   rightSignal = LimitBits(rightSignal, bitAmount);
+   
+   //if samples after bits
+   if(samplesAfter) {
+      leftSignal = LimitSamples(leftSignal, samplesAmount);
+      rightSignal = LimitSamples(rightSignal, samplesAmount);
+   }
    
    
    if(outputL.IsConnected()) {
@@ -696,7 +705,15 @@ public void ProcessSample()
 public String GetTooltipText( VoltageComponent component )
 {
    //[user-GetTooltipText]   Add your own code here
-
+   if(component == knobSamples) {
+      int normalizedValue = (int) component.GetValue();
+      return (normalizedValue + "");
+   }
+   
+   if(component == knobBits) {
+      int normalizedValue = (int) component.GetValue();
+      return (normalizedValue + "");
+   }
 
 
    return super.GetTooltipText( component );
@@ -814,13 +831,12 @@ public void SetStateInformationForVariations(byte[] stateInfo)
 
 
 // Auto-generated variables
-private VoltageLabel textLabel13;
+private VoltageLabel labelToggleSamples;
 private VoltageToggle toggleSamples;
-private VoltageLabel labelDebug;
-private VoltageLabel labelToggle;
+private VoltageLabel labelToggleDist;
 private VoltageToggle toggleDistort;
-private VoltageLabel textLabel10;
-private VoltageLabel textLabel9;
+private VoltageLabel labelBits;
+private VoltageLabel labelSamples;
 private VoltageLabel labelDistortion;
 private VoltageLabel textLabel7;
 private VoltageLabel labelOR;
@@ -834,17 +850,34 @@ private VoltageAudioJack outputL;
 private VoltageAudioJack inputR;
 private VoltageAudioJack inputL;
 private VoltageKnob knobDistortion;
-private VoltageKnob knobResolution;
+private VoltageKnob knobBits;
 private VoltageKnob knobSamples;
 
 
 //[user-code-and-variables]    Add your own variables and functions here
 
 private double distortionAmount;
-private double samplesAmount;
-private double resolutionAmount;
+private int samplesAmount;
+private int bitAmount;
 private boolean distortAfter;
 private boolean samplesAfter;
+
+private static double DistortSignal(double signal, double distortionPercent) {
+   
+   double distortedSignal = Math.tanh((distortionPercent * 10) * signal);
+   double result = (5*distortionPercent * distortedSignal) + ((1-distortionPercent) * signal);
+   
+   return result;
+
+}
+
+private static double LimitSamples(double signal, int samples) {
+   return signal;
+}
+
+private static double LimitBits(double signal, int bits) {
+   return signal;
+}
 
 //[/user-code-and-variables]
 }
